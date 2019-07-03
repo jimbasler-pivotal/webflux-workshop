@@ -37,10 +37,7 @@ Unzip the given file into a directory and import that application into your IDE.
 If generated right, you should have a main `Application` class that looks like this:
 
 [source,java]
-.stock-quotes/src/main/java/io/spring/workshop/stockquotes/StockQuotesApplication.java
-----
-include::../stock-quotes/src/main/java/io/spring/workshop/stockquotes/StockQuotesApplication.java[]
-----
+include::https://github.com/jimbasler-pivotal/webflux-workshop/blob/master/stock-quotes/src/main/java/io/spring/workshop/stockquotes/StockQuotesApplication.java[]
 
 Edit your `application.properties` file to start the server on a specific port.
 
