@@ -30,11 +30,11 @@ and {spring-framework-doc-base}/javadoc-api/[javadoc]
 === Create this application
 
 Go to `https://start.spring.io` and create a Maven project with Spring Boot {spring-boot-version},
-with groupId `io.spring.workshop` and artifactId `stock-quotes`. Select the `Reactive Web`
-Boot starter.
-Unzip the given file into a directory and import that application into your IDE.
+for Group use `io.spring.workshop` and for Artifact use `stock-quotes`. Under Dependencies search for `Spring Reactive Web`
+and select it.
+Click 'Generate the project' to download it, then unzip and import the Maven project into your favorite IDE.
 
-If generated right, you should have a main `Application` class that looks like this:
+If generated correctly, you should have a main `Application` class that looks like this:
 
 [source,java]
 include::https://github.com/jimbasler-pivotal/webflux-workshop/blob/ee5fc2ef9435236b0c3ca769802805c37fefdfc1/stock-quotes/src/main/java/io/spring/workshop/stockquotes/StockQuotesApplication.java#L1-L12[]
@@ -138,12 +138,11 @@ WebFlux workshop%
 
 === Expose the Flux<Quotes> as a web service
 
-First, let's inject our `QuoteGenerator` instance in our `QuoteHandler`, instantiate
-a `Flux<Quote>` from it that emits a `Quote` every 200 msec and can be **shared** between
-multiple subscribers (look at the `Flux` operators for that). This instance should be kept
-as an attribute for reusability.
+First, let's inject our `QuoteGenerator` in the constructor for `QuoteHandler`, declare
+a `Flux<Quote>` class field that emits a `Quote` every 1000 msec and can be **shared** between
+multiple subscribers (look at the `Flux` operators for that).
 
-Now create a `streamQuotes` handler that streams those generated quotes 
+Now create a `streamQuotes` method that streams those generated quotes 
 with the `"application/stream+json"` content type. Add the corresponding part in the `RouterFunction`,
 on the `"/quotes"` endpoint.
 
