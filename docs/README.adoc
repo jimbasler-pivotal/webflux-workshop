@@ -37,7 +37,7 @@ Click 'Generate the project' to download it, then unzip and import the Maven pro
 If generated correctly, you should have a main `Application` class that looks like this:
 
 [source,java]
-include::https://github.com/jimbasler-pivotal/webflux-workshop/blob/ee5fc2ef9435236b0c3ca769802805c37fefdfc1/stock-quotes/src/main/java/io/spring/workshop/stockquotes/StockQuotesApplication.java#L1-L12[]
+include::..stock-quotes/src/main/java/io/spring/workshop/stockquotes/StockQuotesApplication.java[]
 
 Edit your `application.properties` file to start the server on a specific port.
 
