@@ -136,15 +136,11 @@ WebFlux workshop%
 ----
 
 
-=== Expose the Flux<Quotes> as a web service
+=== Expose the Flux<Quotes> as an API
 
-First, let's inject our `QuoteGenerator` in the constructor for `QuoteHandler`, declare
-a `Flux<Quote>` class field that emits a `Quote` every 1000 msec and can be **shared** between
-multiple subscribers (look at the `Flux` operators for that).
+First, let's declare a `Flux<Quote>` class field will emits a `Quote` every 1000 msec and can be **shared** between multiple subscribers (look at the `Flux` operators for that). Next, inject `QuoteGenerator` in the constructor of `QuoteHandler`.
 
-Now create a `streamQuotes` method that streams those generated quotes 
-with the `"application/stream+json"` content type. Add the corresponding part in the `RouterFunction`,
-on the `"/quotes"` endpoint.
+Now create a `streamQuotes` method that streams generated quotes with the `"application/stream+json"` content type. Add the corresponding part in the `RouterFunction`, on the `"/quotes"` endpoint.
 
 [source,bash]
 ----
@@ -163,8 +159,8 @@ Content-Type: application/stream+json
 ----
 
 
-Let's now create a variant of that — instead of streaming all values (with an infinite stream), we can
-now take the last "n" elements of that `Flux` and return those as a collection of Quotes with
+Let's now create a variant. Instead of streaming all values (with an infinite stream), we can
+now take the last "n" elements of that `Flux` and return them as a collection of Quotes with
 the content type `"application/json"`. Note that you should take the requested number of Quotes
 from the request itself, with the query parameter named `"size"` (or pick `10` as the default size
 if none was provided).
@@ -184,8 +180,8 @@ Content-Type: application/json
 
 Spring WebFlux (actually the `spring-test` module) includes a `WebTestClient`
 that can be used to test WebFlux server endpoints with or without a running server.
-Tests without a running server are comparable to MockMvc from Spring MVC where mock request 
-and response are used instead of connecting over the network using a socket.
+Tests without a running server are comparable to MockMvc from Spring MVC where mock requests 
+and responses are used instead of connecting over the network using a socket.
 The WebTestClient however can also perform tests against a running server.
 
 You can check that your last endpoint is working properly with the following
@@ -202,8 +198,7 @@ include::../stock-quotes/src/test/java/io/spring/workshop/stockquotes/StockQuote
 === Create this application
 
 Go to `https://start.spring.io` and create a Maven project with Spring Boot {spring-boot-version},
-with groupId `io.spring.workshop` and artifactId `trading-service`. Select the `Reactive Web`
-, `Devtools`, `Thymeleaf` and `Reactive Mongo` Boot starters.
+for Group use `io.spring.workshop` and for Artifact use `trading-service`. Under Dependencies search for and select `Spring Reactive Web`, `Spring Boot DevTools`, `Thymeleaf` and `Spring Data Reactive MongoDB`.
 Unzip the given file into a directory and import that application into your IDE.
 
 === Use Tomcat as a web engine
