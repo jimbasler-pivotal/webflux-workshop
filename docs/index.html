@@ -526,8 +526,20 @@ Click 'Generate the project' to download it, then unzip and import the Maven pro
 <p>If generated correctly, you should have a main <code>Application</code> class that looks like this:</p>
 </div>
 <div class="listingblock">
+<div class="title">stock-quotes/src/main/resources/application.properties</div>
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">Unresolved directive in README.adoc - include::..stock-quotes/src/main/java/io/spring/workshop/stockquotes/StockQuotesApplication.java[]</code></pre>
+<pre class="prettyprint highlight"><code data-lang="java">package io.spring.workshop.stockquotes;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class StockQuotesApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(StockQuotesApplication.class, args);
+	}
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1593,7 +1605,7 @@ public class EchoWebSocketHandlerTests {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-07-08 15:22:48 -0500
+Last updated 2019-07-08 15:26:46 -0500
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
