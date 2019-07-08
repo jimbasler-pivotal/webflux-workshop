@@ -37,7 +37,7 @@ Click 'Generate the project' to download it, then unzip and import the Maven pro
 If generated correctly, you should have a main `Application` class that looks like this:
 
 [source,java]
-.stock-quotes/src/main/resources/application.properties
+.stock-quotes/src/main/java/io/spring/workshop/stockquotes/StockQuotesApplication.java
 ----
 include::../stock-quotes/src/main/java/io/spring/workshop/stockquotes/StockQuotesApplication.java[]
 ----
