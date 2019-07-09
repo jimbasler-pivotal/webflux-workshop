@@ -248,7 +248,7 @@ NOTE: Since the `run` method returns void, it expects a blocking implementation.
 `blockLast(Duration)` operator on the `Flux` returned by the repository when inserting data.
 You can also `then().block(Duration)` to turn that `Flux` into a `Mono<Void>` that waits for completion.
 
-=== Create a JSON web service
+=== Create a REST service
 
 We're now going to expose `TradingUser` through a Controller.
 First, create a `UserController` annotated with `@RestController`.
@@ -314,9 +314,9 @@ the server for `Quotes` using the Server Sent Event transport.
 
 Now create a `QuotesController` annotated with `@Controller` and add two methods.
 One that renders the `quotes.html` template for incoming `"GET /quotes"` requests.
-The other should response to `"GET /quotes/feed"` requests with the `"text/event-stream"` content-type,
-with a `Flux<Quote>` as the response body. This data is already server by the `stock-quotes` application
-, so you can use a `WebClient` to request the remote web service to retrieve that `Flux`.
+The other should respond to `"GET /quotes/feed"` requests with the `"text/event-stream"` content-type,
+with a `Flux<Quote>` as the response body. This data is already served by the `stock-quotes` application
+, so you can use a `WebClient` to request the remote service to retrieve that `Flux`.
 
 TIP: You should avoid making a request to the `stock-quotes` service for every browser connecting to
 that page — for that, you can use the `Flux.share()` operator. 

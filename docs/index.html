@@ -462,7 +462,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_create_this_application_2">Create this application</a></li>
 <li><a href="#_use_tomcat_as_a_web_engine">Use Tomcat as a web engine</a></li>
 <li><a href="#_use_a_reactive_datastore">Use a reactive datastore</a></li>
-<li><a href="#_create_a_json_web_service">Create a JSON web service</a></li>
+<li><a href="#_create_a_rest_service">Create a REST service</a></li>
 <li><a href="#_use_thymeleaf_to_render_html_views">Use Thymeleaf to render HTML views</a></li>
 <li><a href="#_use_the_webclient_to_stream_json_to_the_browser">Use the WebClient to stream JSON to the browser</a></li>
 <li><a href="#_create_and_configure_a_websockethandler">Create and Configure a WebSocketHandler</a></li>
@@ -1033,7 +1033,7 @@ You can also <code>then().block(Duration)</code> to turn that <code>Flux</code> 
 </div>
 </div>
 <div class="sect2">
-<h3 id="_create_a_json_web_service"><a class="anchor" href="#_create_a_json_web_service"></a>Create a JSON web service</h3>
+<h3 id="_create_a_rest_service"><a class="anchor" href="#_create_a_rest_service"></a>Create a REST service</h3>
 <div class="paragraph">
 <p>We&#8217;re now going to expose <code>TradingUser</code> through a Controller.
 First, create a <code>UserController</code> annotated with <code>@RestController</code>.
@@ -1350,9 +1350,9 @@ the server for <code>Quotes</code> using the Server Sent Event transport.</p>
 <div class="paragraph">
 <p>Now create a <code>QuotesController</code> annotated with <code>@Controller</code> and add two methods.
 One that renders the <code>quotes.html</code> template for incoming <code>"GET /quotes"</code> requests.
-The other should response to <code>"GET /quotes/feed"</code> requests with the <code>"text/event-stream"</code> content-type,
-with a <code>Flux&lt;Quote&gt;</code> as the response body. This data is already server by the <code>stock-quotes</code> application
-, so you can use a <code>WebClient</code> to request the remote web service to retrieve that <code>Flux</code>.</p>
+The other should respond to <code>"GET /quotes/feed"</code> requests with the <code>"text/event-stream"</code> content-type,
+with a <code>Flux&lt;Quote&gt;</code> as the response body. This data is already served by the <code>stock-quotes</code> application
+, so you can use a <code>WebClient</code> to request the remote service to retrieve that <code>Flux</code>.</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -1560,7 +1560,7 @@ public class EchoWebSocketHandlerTests {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-07-08 15:30:46 -0500
+Last updated 2019-07-09 13:24:23 -0500
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
