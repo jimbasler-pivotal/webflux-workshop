@@ -29,9 +29,9 @@ and {spring-framework-doc-base}/javadoc-api/[javadoc]
 
 === Create this application
 
-Go to `https://start.spring.io` and create a Maven project with Spring Boot {spring-boot-version},
-for Group use `io.spring.workshop` and for Artifact use `stock-quotes`. Under Dependencies search for `Spring Reactive Web`
-and select it.
+Go to `https://start.spring.io` and create a Maven project with Spring Boot {spring-boot-version}. 
+For Group use `io.spring.workshop` and for Artifact use `stock-quotes`. Under Dependencies search for `Spring Reactive Web`
+and add it to your project.
 Click 'Generate the project' to download it, then unzip and import the Maven project into your favorite IDE.
 
 If generated correctly, you should have a main `Application` class that looks like this:
@@ -195,6 +195,37 @@ integration test:
 ----
 include::../stock-quotes/src/test/java/io/spring/workshop/stockquotes/StockQuotesApplicationTests.java[]
 ----
+
+=== Deploy to Cloud Foundry
+
+Cloud Foundry is an open source, multi cloud application platform as a service. We will use it to easily deploy our apps on Amazon Web Service. The same process may be used for Azure, GCP, vSphere, and other IaaS providers. 
+
+1. Create a free account at https://run.pivotal.io
+2. Login to Pivotal Web Services
+3. Download the CLI by navigating to Tools at https://console.run.pivotal.io/tools
+4. Login with your account credentials
+[source,bash]
+----
+$ cf login -a api.run.pivotal.io
+----
+5. Update the application manifest which provides metadata to Cloud Foundry telling it how to deploy your application.
+[source,bash]
+.stock-quotes/manifest.yml
+----
+include::../stock-quotes/manifest.yml[]
+----
+6. Deploy your application
+[source,bash]
+----
+$ cf push
+----
+7. Make sure your application starts. You should see something similar to this.
+[source,bash]
+----
+     state     since                  cpu    memory         disk           details
+#0   running   2019-07-09T19:19:45Z   0.0%   100.5M of 1G   129.5M of 1G
+----
+
 
 == Trading Service application
 

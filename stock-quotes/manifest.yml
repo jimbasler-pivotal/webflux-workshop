@@ -1,0 +1,10 @@
+---
+applications:
+- name: stock-quotes
+  memory: 1G
+  instances: 1
+  path: target/stock-quotes-0.0.1-SNAPSHOT.jar
+  buildpacks:
+  - java_buildpack
+  routes:
+  - route: stock-quotes-<your initials here>.cfapps.io
