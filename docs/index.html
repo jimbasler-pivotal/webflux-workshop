@@ -573,10 +573,15 @@ Copy the following classes to your project.</p>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="java">package io.spring.workshop.stockquotes;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.time.Instant;
 
+@Getter @Setter @NoArgsConstructor
 public class Quote {
 
 	private static final MathContext MATH_CONTEXT = new MathContext(2);
@@ -587,9 +592,6 @@ public class Quote {
 
 	private Instant instant;
 
-	public Quote() {
-	}
-
 	public Quote(String ticker, BigDecimal price) {
 		this.ticker = ticker;
 		this.price = price;
@@ -597,30 +599,6 @@ public class Quote {
 
 	public Quote(String ticker, Double price) {
 		this(ticker, new BigDecimal(price, MATH_CONTEXT));
-	}
-
-	public String getTicker() {
-		return ticker;
-	}
-
-	public void setTicker(String ticker) {
-		this.ticker = ticker;
-	}
-
-	public BigDecimal getPrice() {
-		return price;
-	}
-
-	public void setPrice(BigDecimal price) {
-		this.price = price;
-	}
-
-	public Instant getInstant() {
-		return instant;
-	}
-
-	public void setInstant(Instant instant) {
-		this.instant = instant;
 	}
 
 	@Override
@@ -982,10 +960,14 @@ for this workshop, we&#8217;ll use an in-memory instance of MongoDB. So add the 
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="java">package io.spring.workshop.tradingservice;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
+@Getter @Setter @NoArgsConstructor
 public class TradingUser {
 
 	@Id
@@ -995,9 +977,6 @@ public class TradingUser {
 
 	private String fullName;
 
-	public TradingUser() {
-	}
-
 	public TradingUser(String id, String userName, String fullName) {
 		this.id = id;
 		this.userName = userName;
@@ -1006,30 +985,6 @@ public class TradingUser {
 
 	public TradingUser(String userName, String fullName) {
 		this.userName = userName;
-		this.fullName = fullName;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-
-	public String getFullName() {
-		return fullName;
-	}
-
-	public void setFullName(String fullName) {
 		this.fullName = fullName;
 	}
 
