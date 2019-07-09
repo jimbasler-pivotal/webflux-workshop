@@ -455,6 +455,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_create_your_first_handlerfunction_routerfunction">Create your first HandlerFunction + RouterFunction</a></li>
 <li><a href="#_expose_the_fluxquotes_as_an_api">Expose the Flux&lt;Quotes&gt; as an API</a></li>
 <li><a href="#_integration_tests_with_webtestclient">Integration tests with WebTestClient</a></li>
+<li><a href="#_deploy_to_cloud_foundry">Deploy to Cloud Foundry</a></li>
 </ul>
 </li>
 <li><a href="#_trading_service_application">Trading Service application</a>
@@ -517,9 +518,9 @@ and <a href="http://docs.spring.io/spring-framework/docs/5.1.8.RELEASE/javadoc-a
 <div class="sect2">
 <h3 id="_create_this_application"><a class="anchor" href="#_create_this_application"></a>Create this application</h3>
 <div class="paragraph">
-<p>Go to <code><a href="https://start.spring.io" class="bare">https://start.spring.io</a></code> and create a Maven project with Spring Boot 2.1.6.RELEASE,
-for Group use <code>io.spring.workshop</code> and for Artifact use <code>stock-quotes</code>. Under Dependencies search for <code>Spring Reactive Web</code>
-and select it.
+<p>Go to <code><a href="https://start.spring.io" class="bare">https://start.spring.io</a></code> and create a Maven project with Spring Boot 2.1.6.RELEASE.
+For Group use <code>io.spring.workshop</code> and for Artifact use <code>stock-quotes</code>. Under Dependencies search for <code>Spring Reactive Web</code>
+and add it to your project.
 Click 'Generate the project' to download it, then unzip and import the Maven project into your favorite IDE.</p>
 </div>
 <div class="paragraph">
@@ -901,6 +902,68 @@ public class StockQuotesApplicationTests {
 	}
 
 }</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_deploy_to_cloud_foundry"><a class="anchor" href="#_deploy_to_cloud_foundry"></a>Deploy to Cloud Foundry</h3>
+<div class="paragraph">
+<p>Cloud Foundry is an open source, multi cloud application platform as a service. We will use it to easily deploy our apps on Amazon Web Service. The same process may be used for Azure, GCP, vSphere, and other IaaS providers.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create a free account at <a href="https://run.pivotal.io" class="bare">https://run.pivotal.io</a></p>
+</li>
+<li>
+<p>Login to Pivotal Web Services</p>
+</li>
+<li>
+<p>Download the CLI by navigating to Tools at <a href="https://console.run.pivotal.io/tools" class="bare">https://console.run.pivotal.io/tools</a></p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Login with your account credentials</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="bash">$ cf login -a api.run.pivotal.io</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Update the application manifest which provides metadata to Cloud Foundry telling it how to deploy your application.</p>
+</div>
+<div class="listingblock">
+<div class="title">stock-quotes/manifest.yml</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="bash">---
+applications:
+- name: stock-quotes
+  memory: 1G
+  instances: 1
+  path: target/stock-quotes-0.0.1-SNAPSHOT.jar
+  buildpacks:
+  - java_buildpack
+  routes:
+  - route: stock-quotes-&lt;your initials here&gt;.cfapps.io</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Deploy your application</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="bash">$ cf push</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Make sure your application starts. You should see something similar to this.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="bash">     state     since                  cpu    memory         disk           details
+#0   running   2019-07-09T19:19:45Z   0.0%   100.5M of 1G   129.5M of 1G</code></pre>
 </div>
 </div>
 </div>
@@ -1560,7 +1623,7 @@ public class EchoWebSocketHandlerTests {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-07-09 13:24:23 -0500
+Last updated 2019-07-09 14:56:31 -0500
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
