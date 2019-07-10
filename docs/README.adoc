@@ -198,7 +198,7 @@ include::../stock-quotes/src/test/java/io/spring/workshop/stockquotes/StockQuote
 
 === Deploy to Cloud Foundry
 
-Cloud Foundry is an open source, multi cloud application platform as a service. We will use it to easily deploy our apps on Amazon Web Service. The same process may be used for Azure, GCP, vSphere, and other IaaS providers. 
+Cloud Foundry is an open source, multi cloud application platform as a service. We will use it to easily deploy our apps on Amazon Web Service. The same process may be used for Azure, GCP, vSphere, and other IaaS providers where Cloud Foundry is used. 
 
 1. Create a free account at https://run.pivotal.io
 2. Login to Pivotal Web Services
@@ -210,7 +210,7 @@ Login with your account credentials
 $ cf login -a api.run.pivotal.io
 ----
 
-Update the application manifest which provides metadata to Cloud Foundry telling it how to deploy your application.
+Update the application manifest which provides metadata to Cloud Foundry telling it how to deploy your application. Make sure you update the route to a unique value. This is the URL used to access your app.
 [source,bash]
 .stock-quotes/manifest.yml
 ----
@@ -230,14 +230,37 @@ Make sure your application starts. You should see something similar to this.
 #0   running   2019-07-09T19:19:45Z   0.0%   100.5M of 1G   129.5M of 1G
 ----
 
+Test your application.
+[source,bash]
+----
+$ curl https://stock-quotes-<your initials here>.cfapps.io/quotes -i -H "Accept: application/stream+json"
+
+HTTP/1.1 200 OK
+Content-Type: application/stream+json
+Date: Tue, 09 Jul 2019 20:06:18 GMT
+X-Vcap-Request-Id: 8bfd5f43-08b1-4c04-559d-c3dc8ef4b90f
+transfer-encoding: chunked
+Connection: keep-alive
+
+{"ticker":"CTXS","price":82.25,"instant":"2019-07-09T20:06:18.640Z"}
+{"ticker":"DELL","price":65.8,"instant":"2019-07-09T20:06:18.640Z"}
+{"ticker":"GOOG","price":853.1,"instant":"2019-07-09T20:06:18.640Z"}
+{"ticker":"MSFT","price":66.0,"instant":"2019-07-09T20:06:18.640Z"}
+{"ticker":"ORCL","price":46.84,"instant":"2019-07-09T20:06:18.640Z"}
+{"ticker":"RHT","price":87.9,"instant":"2019-07-09T20:06:18.640Z"}
+{"ticker":"VMW","price":94.0,"instant":"2019-07-09T20:06:18.640Z"}
+{"ticker":"CTXS","price":82.64,"instant":"2019-07-09T20:06:19.639Z"}
+...
+----
+
 
 == Trading Service application
 
 === Create this application
 
-Go to `https://start.spring.io` and create a Maven project with Spring Boot {spring-boot-version},
-for Group use `io.spring.workshop` and for Artifact use `trading-service`. Under Dependencies search for and select `Spring Reactive Web`, `Spring Boot DevTools`, `Thymeleaf` and `Spring Data Reactive MongoDB`.
-Unzip the given file into a directory and import that application into your IDE.
+Go to `https://start.spring.io` and create a Maven project with Spring Boot {spring-boot-version}. 
+For Group use `io.spring.workshop` and for Artifact use `trading-service`. Under Dependencies search and add `Spring Reactive Web`, `Spring Boot DevTools`, `Thymeleaf` and `Spring Data Reactive MongoDB` to your project.
+Unzip the given file into a directory and import into your favorite IDE.
 
 === Use Tomcat as a web engine
 
@@ -251,12 +274,12 @@ Tomcat as an alternative.
 include::../trading-service/pom.xml[tags=tomcat]
 ----
 
-Note that Spring Boot supports as well Undertow and Jetty.
+Note that Spring Boot supports Undertow and Jetty in addition to Netty and Tomcat.
 
 === Use a reactive datastore
 
-In this application, we'll use a MongoDB datastore with its reactive driver;
-for this workshop, we'll use an in-memory instance of MongoDB. So add the following:
+In this application we'll use a MongoDB datastore with its reactive driver;
+for this workshop we'll use an in-memory instance of MongoDB. Add the following:
 
 [source,xml]
 .trading-service/pom.xml
@@ -272,7 +295,9 @@ We'd like to manage `TradingUser` with our datastore.
 include::../trading-service/src/main/java/io/spring/workshop/tradingservice/TradingUser.java[]
 ----
 
-Now create a `TradingUserRepository` interface that extends `ReactiveMongoRepository`.
+For brevity we are keeping these instructions simple. You may reference the finished projects in the repo if you need some help.
+
+Create a `TradingUserRepository` interface that extends `ReactiveMongoRepository`.
 Add a `findByUserName(String userName)` method that returns a single `TradingUser` in a reactive fashion.
 
 We'd like to insert users in our datastore when the application starts up. For that, create a `UsersCommandLineRunner`
@@ -386,6 +411,13 @@ Add the following template file to your application:
 include::../trading-service/src/main/resources/templates/websocket.html[]
 ----
 
+Make sure you update the URL to the WebSocket address in the template.
+
+[source,html]
+----
+var socket = new WebSocket("wss://trading-service-<your initials here>.cfapps.io:4443/websocket/echo");
+----
+
 === Integration tests with WebSocketClient
 
 `WebSocketClient` included in Spring WebFlux can be used to test your WebSocket endpoints.
@@ -398,6 +430,36 @@ following integration test:
 ----
 include::../trading-service/src/test/java/io/spring/workshop/tradingservice/websocket/EchoWebSocketHandlerTests.java[]
 ----
+
+=== Deploy to Cloud Foundry
+
+Login with your account credentials
+[source,bash]
+----
+$ cf login -a api.run.pivotal.io
+----
+
+Update the application manifest which provides metadata to Cloud Foundry telling it how to deploy your application. Make sure you update the route to a unique value. This is the URL used to access your app.
+[source,bash]
+.trading-service/manifest.yml
+----
+include::../trading-service/manifest.yml[]
+----
+
+Deploy your application
+[source,bash]
+----
+$ cf push
+----
+
+Make sure your application starts. You should see something similar to this.
+[source,bash]
+----
+     state     since                  cpu    memory         disk           details
+#0   running   2019-07-09T19:19:45Z   0.0%   100.5M of 1G   129.5M of 1G
+----
+
+Test your application by browsing to the URL.
 
 == Additional Resources
 

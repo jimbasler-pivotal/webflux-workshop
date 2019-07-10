@@ -468,6 +468,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_use_the_webclient_to_stream_json_to_the_browser">Use the WebClient to stream JSON to the browser</a></li>
 <li><a href="#_create_and_configure_a_websockethandler">Create and Configure a WebSocketHandler</a></li>
 <li><a href="#_integration_tests_with_websocketclient">Integration tests with WebSocketClient</a></li>
+<li><a href="#_deploy_to_cloud_foundry_2">Deploy to Cloud Foundry</a></li>
 </ul>
 </li>
 <li><a href="#_additional_resources">Additional Resources</a></li>
@@ -908,7 +909,7 @@ public class StockQuotesApplicationTests {
 <div class="sect2">
 <h3 id="_deploy_to_cloud_foundry"><a class="anchor" href="#_deploy_to_cloud_foundry"></a>Deploy to Cloud Foundry</h3>
 <div class="paragraph">
-<p>Cloud Foundry is an open source, multi cloud application platform as a service. We will use it to easily deploy our apps on Amazon Web Service. The same process may be used for Azure, GCP, vSphere, and other IaaS providers.</p>
+<p>Cloud Foundry is an open source, multi cloud application platform as a service. We will use it to easily deploy our apps on Amazon Web Service. The same process may be used for Azure, GCP, vSphere, and other IaaS providers where Cloud Foundry is used.</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -932,7 +933,7 @@ public class StockQuotesApplicationTests {
 </div>
 </div>
 <div class="paragraph">
-<p>Update the application manifest which provides metadata to Cloud Foundry telling it how to deploy your application.</p>
+<p>Update the application manifest which provides metadata to Cloud Foundry telling it how to deploy your application. Make sure you update the route to a unique value. This is the URL used to access your app.</p>
 </div>
 <div class="listingblock">
 <div class="title">stock-quotes/manifest.yml</div>
@@ -966,6 +967,31 @@ applications:
 #0   running   2019-07-09T19:19:45Z   0.0%   100.5M of 1G   129.5M of 1G</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>Test your application.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="bash">$ curl https://stock-quotes-&lt;your initials here&gt;.cfapps.io/quotes -i -H "Accept: application/stream+json"
+
+HTTP/1.1 200 OK
+Content-Type: application/stream+json
+Date: Tue, 09 Jul 2019 20:06:18 GMT
+X-Vcap-Request-Id: 8bfd5f43-08b1-4c04-559d-c3dc8ef4b90f
+transfer-encoding: chunked
+Connection: keep-alive
+
+{"ticker":"CTXS","price":82.25,"instant":"2019-07-09T20:06:18.640Z"}
+{"ticker":"DELL","price":65.8,"instant":"2019-07-09T20:06:18.640Z"}
+{"ticker":"GOOG","price":853.1,"instant":"2019-07-09T20:06:18.640Z"}
+{"ticker":"MSFT","price":66.0,"instant":"2019-07-09T20:06:18.640Z"}
+{"ticker":"ORCL","price":46.84,"instant":"2019-07-09T20:06:18.640Z"}
+{"ticker":"RHT","price":87.9,"instant":"2019-07-09T20:06:18.640Z"}
+{"ticker":"VMW","price":94.0,"instant":"2019-07-09T20:06:18.640Z"}
+{"ticker":"CTXS","price":82.64,"instant":"2019-07-09T20:06:19.639Z"}
+...</code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -975,9 +1001,9 @@ applications:
 <div class="sect2">
 <h3 id="_create_this_application_2"><a class="anchor" href="#_create_this_application_2"></a>Create this application</h3>
 <div class="paragraph">
-<p>Go to <code><a href="https://start.spring.io" class="bare">https://start.spring.io</a></code> and create a Maven project with Spring Boot 2.1.6.RELEASE,
-for Group use <code>io.spring.workshop</code> and for Artifact use <code>trading-service</code>. Under Dependencies search for and select <code>Spring Reactive Web</code>, <code>Spring Boot DevTools</code>, <code>Thymeleaf</code> and <code>Spring Data Reactive MongoDB</code>.
-Unzip the given file into a directory and import that application into your IDE.</p>
+<p>Go to <code><a href="https://start.spring.io" class="bare">https://start.spring.io</a></code> and create a Maven project with Spring Boot 2.1.6.RELEASE.
+For Group use <code>io.spring.workshop</code> and for Artifact use <code>trading-service</code>. Under Dependencies search and add <code>Spring Reactive Web</code>, <code>Spring Boot DevTools</code>, <code>Thymeleaf</code> and <code>Spring Data Reactive MongoDB</code> to your project.
+Unzip the given file into a directory and import into your favorite IDE.</p>
 </div>
 </div>
 <div class="sect2">
@@ -997,14 +1023,14 @@ Tomcat as an alternative.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Note that Spring Boot supports as well Undertow and Jetty.</p>
+<p>Note that Spring Boot supports Undertow and Jetty in addition to Netty and Tomcat.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_use_a_reactive_datastore"><a class="anchor" href="#_use_a_reactive_datastore"></a>Use a reactive datastore</h3>
 <div class="paragraph">
-<p>In this application, we&#8217;ll use a MongoDB datastore with its reactive driver;
-for this workshop, we&#8217;ll use an in-memory instance of MongoDB. So add the following:</p>
+<p>In this application we&#8217;ll use a MongoDB datastore with its reactive driver;
+for this workshop we&#8217;ll use an in-memory instance of MongoDB. Add the following:</p>
 </div>
 <div class="listingblock">
 <div class="title">trading-service/pom.xml</div>
@@ -1072,7 +1098,10 @@ public class TradingUser {
 </div>
 </div>
 <div class="paragraph">
-<p>Now create a <code>TradingUserRepository</code> interface that extends <code>ReactiveMongoRepository</code>.
+<p>For brevity we are keeping these instructions simple. You may reference the finished projects in the repo if you need some help.</p>
+</div>
+<div class="paragraph">
+<p>Create a <code>TradingUserRepository</code> interface that extends <code>ReactiveMongoRepository</code>.
 Add a <code>findByUserName(String userName)</code> method that returns a single <code>TradingUser</code> in a reactive fashion.</p>
 </div>
 <div class="paragraph">
@@ -1507,8 +1536,7 @@ the incoming request to the default <code>WebSocketService</code> which is <code
 &lt;script type="text/javascript"&gt;
     $(document).ready(function () {
         if (!("WebSocket" in window)) WebSocket = MozWebSocket;
-        var socket = new WebSocket("ws://localhost:8080/websocket/echo");
-
+        var socket = new WebSocket("wss://trading-service-jb.cfapps.io:4443/websocket/echo");
         socket.onopen = function (event) {
             var newMessage = document.createElement('p');
             newMessage.textContent = "-- CONNECTED";
@@ -1533,6 +1561,14 @@ the incoming request to the default <code>WebSocketService</code> which is <code
 &lt;/script&gt;
 &lt;/body&gt;
 &lt;/html&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Make sure you update the URL to the WebSocket address in the template.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="html">var socket = new WebSocket("wss://trading-service-&lt;your initials here&gt;.cfapps.io:4443/websocket/echo");</code></pre>
 </div>
 </div>
 </div>
@@ -1600,6 +1636,55 @@ public class EchoWebSocketHandlerTests {
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_deploy_to_cloud_foundry_2"><a class="anchor" href="#_deploy_to_cloud_foundry_2"></a>Deploy to Cloud Foundry</h3>
+<div class="paragraph">
+<p>Login with your account credentials</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="bash">$ cf login -a api.run.pivotal.io</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Update the application manifest which provides metadata to Cloud Foundry telling it how to deploy your application. Make sure you update the route to a unique value. This is the URL used to access your app.</p>
+</div>
+<div class="listingblock">
+<div class="title">trading-service/manifest.yml</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="bash">---
+applications:
+- name: trading-service
+  memory: 1G
+  instances: 1
+  path: target/trading-service-0.0.1-SNAPSHOT.jar
+  buildpacks:
+  - java_buildpack
+  routes:
+  - route: trading-service-jb.cfapps.io</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Deploy your application</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="bash">$ cf push</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Make sure your application starts. You should see something similar to this.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="bash">     state     since                  cpu    memory         disk           details
+#0   running   2019-07-09T19:19:45Z   0.0%   100.5M of 1G   129.5M of 1G</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Test your application by browsing to the URL.</p>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -1623,7 +1708,7 @@ public class EchoWebSocketHandlerTests {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-07-09 14:56:31 -0500
+Last updated 2019-07-10 07:25:57 -0500
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
