@@ -40,8 +40,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
         if (!("WebSocket" in window)) WebSocket = MozWebSocket;
-        var socket = new WebSocket("ws://localhost:8080/websocket/echo");
-
+        var socket = new WebSocket("wss://trading-service-jb.cfapps.io:4443/websocket/echo");
         socket.onopen = function (event) {
             var newMessage = document.createElement('p');
             newMessage.textContent = "-- CONNECTED";

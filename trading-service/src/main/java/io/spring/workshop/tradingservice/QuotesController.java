@@ -21,7 +21,7 @@ public class QuotesController {
 	@GetMapping(path = "/quotes/feed", produces = TEXT_EVENT_STREAM_VALUE)
 	@ResponseBody
 	public Flux<Quote> quotesStream() {
-		return WebClient.create("http://localhost:8081")
+		return WebClient.create("https://stock-quotes-jb.cfapps.io")
 				.get()
 				.uri("/quotes")
 				.accept(APPLICATION_STREAM_JSON)
