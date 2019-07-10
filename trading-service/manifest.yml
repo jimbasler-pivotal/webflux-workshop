@@ -1,0 +1,10 @@
+---
+applications:
+- name: trading-service
+  memory: 1G
+  instances: 1
+  path: target/trading-service-0.0.1-SNAPSHOT.jar
+  buildpacks:
+  - java_buildpack
+  routes:
+  - route: trading-service-jb.cfapps.io
