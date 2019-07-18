@@ -1,12 +1,16 @@
-= Spring WebFlux Workshop
-Brian Clozel, Violeta Georgieva, Brian Henzelmann, Jim Basler - Pivotal
 :sectanchors: true
 :source-highlighter: prettify
 :icons: font
-:toc: 
+:imagesdir: ./images
+:toc: left
 :spring-boot-version: 2.1.6.RELEASE
 :spring-framework-version: 5.1.8.RELEASE
 :spring-framework-doc-base: http://docs.spring.io/spring-framework/docs/{spring-framework-version}
+
+= Spring WebFlux Workshop
+Brian Clozel, Violeta Georgieva, Brian Henzelmann, Jim Basler
+
+image::stock-trading-banner.jpg[]
 
 This repository hosts a complete workshop on Spring Boot + Spring WebFlux.
 Just follow this README and create your first WebFlux applications!
@@ -17,14 +21,18 @@ We'll create two applications:
 * `stock-quotes` is a functional WebFlux app which streams stock quotes
 * `trading-service` is an annotation-based WebFlux app using a datastore, HTML views, and several browser-related technologies
 
-Reference documentations can be useful while working on those apps:
+== Getting Started
+
+=== Reference Docs
 
 * http://projectreactor.io/docs[Reactor Core documentation]
 * Spring WebFlux 
 {spring-framework-doc-base}/spring-framework-reference/web-reactive.html#spring-webflux[reference documentation]
 and {spring-framework-doc-base}/javadoc-api/[javadoc]
 
-The Spring WebFlux Workshop comes complete with source code, so you can work your way through with working examples. We don’t want to make assumptions on where you are coming from, so here are some helpful resources if tackling the Spring WebFlux Workshop seems just a bit too advanced.
+=== Extra Help (optional)
+
+The Spring WebFlux Workshop comes complete with source code, so you can work your way through with working examples. We don’t want to assume your experience level, so here are some helpful resources if tackling the Spring WebFlux Workshop seems just a bit too advanced.
 
 .New to Getting Started Spring Guides (includes Git)?
 * https://spring.io/guides/gs/sts/[Working a Getting Started Guide with Spring Tool Suite]
@@ -42,7 +50,7 @@ The Spring WebFlux Workshop comes complete with source code, so you can work you
 
 == Stock Quotes application
 
-=== Create this application
+=== Create the application
 
 Go to `https://start.spring.io` and create a Maven project with Spring Boot {spring-boot-version}. 
 For Group use `io.spring.workshop` and for Artifact use `stock-quotes`. Under Dependencies search for `Spring Reactive Web`
@@ -215,9 +223,9 @@ include::../stock-quotes/src/test/java/io/spring/workshop/stockquotes/StockQuote
 
 Cloud Foundry is an open source, multi cloud application platform as a service. We will use it to easily deploy our apps on Amazon Web Service. The same process may be used for Azure, GCP, vSphere, and other IaaS providers where Cloud Foundry is used. 
 
-1. Create a free account at https://run.pivotal.io
-2. Login to Pivotal Web Services
-3. Download the CLI by navigating to Tools at https://console.run.pivotal.io/tools
+. Create a free account at https://run.pivotal.io
+. Login to Pivotal Web Services
+. Download the CLI by navigating to Tools at https://console.run.pivotal.io/tools
 
 Login with your account credentials
 [source,bash]
@@ -271,7 +279,7 @@ Connection: keep-alive
 
 == Trading Service application
 
-=== Create this application
+=== Create the application
 
 Go to `https://start.spring.io` and create a Maven project with Spring Boot {spring-boot-version}. 
 For Group use `io.spring.workshop` and for Artifact use `trading-service`. Under Dependencies search and add `Spring Reactive Web`, `Spring Boot DevTools`, `Thymeleaf` and `Spring Data Reactive MongoDB` to your project.
@@ -478,7 +486,6 @@ Test your application by browsing to the URL.
 
 == Additional Resources
 
-Talks on Spring Reactive:
-
+.Videos on Spring Reactive
 * https://www.youtube.com/watch?v=rdgJ8fOxJhc[Reactive Web Applications with Spring 5 (Rossen Stoyanchev)]
 * https://www.youtube.com/watch?v=Cj4foJzPF80[Developing Reactive applications with Reactive Streams and Java 8 (B.Clozel, S.Deleuze)]
