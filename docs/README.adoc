@@ -24,6 +24,21 @@ Reference documentations can be useful while working on those apps:
 {spring-framework-doc-base}/spring-framework-reference/web-reactive.html#spring-webflux[reference documentation]
 and {spring-framework-doc-base}/javadoc-api/[javadoc]
 
+The Spring WebFlux Workshop comes complete with source code, so you can work your way through with working examples. We don’t want to make assumptions on where you are coming from, so here are some helpful resources if tackling the Spring WebFlux Workshop seems just a bit too advanced.
+
+.New to Getting Started Spring Guides (includes Git)?
+* https://spring.io/guides/gs/sts/[Working a Getting Started Guide with Spring Tool Suite]
+* https://spring.io/guides/gs/intellij-idea/[Working a Getting Started Guide with IntelliJ IDEA]
+
+.New to Maven?
+* https://spring.io/guides/gs/maven/[Building Java Projects with Maven]
+
+.New to Spring Boot?
+* https://spring.io/guides/gs/spring-boot/[Building an Application with Spring Boot]
+
+.Simpler Workshops to Start
+* https://spring.io/guides/gs/reactive-rest-service/[Building a Reactive RESTful Web Service (the quintessential ‘hello world’ example)]
+* https://spring.io/guides/gs/spring-data-reactive-redis/[Accessing Data Reactively with Redis]
 
 == Stock Quotes application
 
