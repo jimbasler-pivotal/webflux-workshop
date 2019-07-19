@@ -3,7 +3,7 @@
 :icons: font
 :imagesdir: ./images
 :toc: left
-:spring-boot-version: 2.1.6.RELEASE
+:spring-boot-version: 2.1.6
 :spring-framework-version: 5.1.8.RELEASE
 :spring-framework-doc-base: http://docs.spring.io/spring-framework/docs/{spring-framework-version}
 
@@ -57,13 +57,24 @@ The Spring WebFlux Workshop comes complete with source code, so you can work you
 * https://spring.io/guides/gs/reactive-rest-service/[Building a Reactive RESTful Web Service (the quintessential ‘hello world’ example)]
 * https://spring.io/guides/gs/spring-data-reactive-redis/[Accessing Data Reactively with Redis]
 
+=== Lombok Setup
+
+In this workshop, you will simplify Java class definitions (constructors, getters, setters) by using annotations provided by Lombok. Your IDE may not necessarily recognize the generated code, but the app should still compile.
+
+If your IDE does not recognize the generated code and you want it to, download Lombok https://projectlombok.org/download[here] and run the downloaded jar `java -jar ~/Downloads/lombok.jar`. This may detect your IDE. If it doesn't, locate the `.exe` or `.ini` for your IDE. After completing the patch, restarting your IDE will now include the Lombok integration.
+
 == Stock Quotes application
 
 === Create the application
 
 Go to `https://start.spring.io` and create a Maven project with Spring Boot {spring-boot-version}. 
-For Group use `io.spring.workshop` and for Artifact use `stock-quotes`. Under Dependencies search for `Spring Reactive Web`
-and add it to your project.
+For Group use `io.spring.workshop` and for Artifact use `stock-quotes`.
+
+Under Dependencies search for and add the following to your project:
+
+* Spring Reactive Web
+* Lombok
+
 Click 'Generate the project' to download it, then unzip and import the Maven project into your favorite IDE.
 
 If generated correctly, you should have a main `Application` class that looks like this:
@@ -130,7 +141,8 @@ Take a look at the code samples in
 
 === Create your first HandlerFunction + RouterFunction
 
-First, create a `QuoteHandler` class and mark is as a `@Component`;this class will have all our handler functions as methods.
+First, create a `QuoteHandler` class and mark is as a `@Component`; this class will have all our handler functions as methods.
+
 Now create a `hello` handler function in that class that always returns "text/plain" HTTP responses with "Hello Spring!" as body.
 
 To route requests to that handler, you need to expose a `RouterFunction` to Spring Boot.
@@ -291,7 +303,16 @@ Connection: keep-alive
 === Create the application
 
 Go to `https://start.spring.io` and create a Maven project with Spring Boot {spring-boot-version}. 
-For Group use `io.spring.workshop` and for Artifact use `trading-service`. Under Dependencies search and add `Spring Reactive Web`, `Spring Boot DevTools`, `Thymeleaf` and `Spring Data Reactive MongoDB` to your project.
+For Group use `io.spring.workshop` and for Artifact use `trading-service`.
+
+Under Dependencies search for and add the following to your project:
+
+* Spring Reactive Web
+* Spring Boot DevTools
+* Thymeleaf
+* Spring Data Reactive MongoDB
+* Lombok
+
 Unzip the given file into a directory and import into your favorite IDE.
 
 === Use Tomcat as a web engine
