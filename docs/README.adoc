@@ -23,6 +23,15 @@ We'll create two applications:
 
 == Getting Started
 
+=== Prerequisites
+
+. Computer with enough CPU and RAM to run your IDE
+. JDK 1.8+ (example source uses 1.8)
+. Your favorite IDE
+. Ability to download Java libraries (no blocking security policies)
+. Admin privileges to install optional software
+. https://run.pivotal.io[Free Pivotal Web Services account]
+
 === Reference Docs
 
 * http://projectreactor.io/docs[Reactor Core documentation]
