@@ -184,9 +184,9 @@ WebFlux workshop%
 ----
 
 
-=== Expose the Flux<Quotes> as an API
+=== Expose the Flux<Quote> as an API
 
-First, let's declare a `Flux<Quote>` class field will emits a `Quote` every 1000 msec and can be **shared** between multiple subscribers (look at the `Flux` operators for that). Next, inject `QuoteGenerator` in the constructor of `QuoteHandler`.
+First, let's declare a `Flux<Quote>` class field in the `QuoteHandler`. We will use this to fetch or stream quotes, depending on the request content type. To achieve this with minimal code, this `Flux` will be **shared** between multiple subscribers (look at the `Flux` operators for that). To set this class field, inject `QuoteGenerator` in the constructor of `QuoteHandler` and share the response of `fetchQuoteStream` to the new field. Emit a `Quote` every 1000ms.
 
 Now create a `streamQuotes` method that streams generated quotes with the `"application/stream+json"` content type. Add the corresponding part in the `RouterFunction`, on the `"/quotes"` endpoint.
 
@@ -473,9 +473,9 @@ Now implement `handle(WebSocketSession session)` method. The handler echoes the 
 To route requests to that handler, you need to map the above WebSocket handler to a specific URL: here, `"/websocket/echo"`.
 
 [source,java]
-.trading-service/src/test/java/io/spring/workshop/tradingservice/websocket/EchoWebSocketHandler.java
+.trading-service/src/main/java/io/spring/workshop/tradingservice/websocket/EchoWebSocketHandler.java
 ----
-include::../trading-service/src/test/java/io/spring/workshop/tradingservice/websocket/EchoWebSocketHandler.java[]
+include::../trading-service/src/main/java/io/spring/workshop/tradingservice/websocket/EchoWebSocketHandler.java[]
 ----
 
 

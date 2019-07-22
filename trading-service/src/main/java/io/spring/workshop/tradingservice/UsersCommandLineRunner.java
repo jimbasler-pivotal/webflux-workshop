@@ -26,7 +26,9 @@ public class UsersCommandLineRunner implements CommandLineRunner {
 				new TradingUser("smaldini", "Stephane Maldini"),
 				new TradingUser("simonbasle", "Simon Basle"),
 				new TradingUser("violetagg", "Violeta Georgieva"),
-				new TradingUser("bclozel", "Brian Clozel")
+				new TradingUser("bclozel", "Brian Clozel"),
+				new TradingUser("jbasler", "Jim Basler"),
+				new TradingUser("bhenzelmann", "Brian Henzelmann")
 		);
 		this.repository.insert(users).blockLast(Duration.ofSeconds(3));
 	}
