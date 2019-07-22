@@ -1,5 +1,6 @@
 package io.spring.workshop.tradingservice;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -7,7 +8,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
-@Getter @Setter @NoArgsConstructor
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor
 public class TradingUser {
 
 	@Id
@@ -16,12 +17,6 @@ public class TradingUser {
 	private String userName;
 
 	private String fullName;
-
-	public TradingUser(String id, String userName, String fullName) {
-		this.id = id;
-		this.userName = userName;
-		this.fullName = fullName;
-	}
 
 	public TradingUser(String userName, String fullName) {
 		this.userName = userName;
