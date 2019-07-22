@@ -471,7 +471,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_create_the_application_2">Create the application</a></li>
 <li><a href="#_use_tomcat_as_a_web_engine">Use Tomcat as a web engine</a></li>
 <li><a href="#_use_a_reactive_datastore">Use a reactive datastore</a></li>
+<li><a href="#_create_add_users_utility">Create add users utility</a></li>
 <li><a href="#_create_a_rest_service">Create a REST service</a></li>
+<li><a href="#_create_a_unit_test">Create a unit test</a></li>
 <li><a href="#_use_thymeleaf_to_render_html_views">Use Thymeleaf to render HTML views</a></li>
 <li><a href="#_use_the_webclient_to_stream_json_to_the_browser">Use the WebClient to stream JSON to the browser</a></li>
 <li><a href="#_create_and_configure_a_websockethandler">Create and Configure a WebSocketHandler</a></li>
@@ -1021,7 +1023,7 @@ public class StockQuotesApplicationTests {
 <div class="sect2">
 <h3 id="_deploy_to_cloud_foundry"><a class="anchor" href="#_deploy_to_cloud_foundry"></a>Deploy to Cloud Foundry</h3>
 <div class="paragraph">
-<p>Cloud Foundry is an open source, multi cloud application platform as a service. We will use it to easily deploy our apps on Amazon Web Service. The same process may be used for Azure, GCP, vSphere, and other IaaS providers where Cloud Foundry is used.</p>
+<p>Cloud Foundry is an open source, multi cloud application Platform-as-a-Service (PaaS). We will easily deploy our apps on Cloud Foundry on Amazon Web Service infrastructure. The same process may be used for Azure, Google Compute Platform, vSphere, and other Infrastructure-as-a-Service (IaaS) providers where Cloud Foundry is used.</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -1045,7 +1047,7 @@ public class StockQuotesApplicationTests {
 </div>
 </div>
 <div class="paragraph">
-<p>Update the application manifest which provides metadata to Cloud Foundry telling it how to deploy your application. Make sure you update the route to a unique value. This is the URL used to access your app.</p>
+<p>Create an application manifest which provides metadata to Cloud Foundry telling it how to deploy your application. Make sure you make the route a unique value. This is the URL used to access your app.</p>
 </div>
 <div class="listingblock">
 <div class="title">stock-quotes/manifest.yml</div>
@@ -1063,7 +1065,7 @@ applications:
 </div>
 </div>
 <div class="paragraph">
-<p>Deploy your application</p>
+<p>Deploy your application from the root directory where the manifest.yml file is located.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1234,12 +1236,28 @@ public class TradingUser {
 </div>
 </div>
 <div class="paragraph">
-<p>For brevity we are keeping these instructions simple. You may reference the finished projects in the repo if you need some help.</p>
-</div>
-<div class="paragraph">
 <p>Create a <code>TradingUserRepository</code> interface that extends <code>ReactiveMongoRepository</code>.
 Add a <code>findByUserName(String userName)</code> method that returns a single <code>TradingUser</code> in a reactive fashion.</p>
 </div>
+<div class="listingblock">
+<div class="title">trading-service/src/main/java/io/spring/workshop/tradingservice/TradingUserRepository.java</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">package io.spring.workshop.tradingservice;
+
+import reactor.core.publisher.Mono;
+
+import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+
+public interface TradingUserRepository extends ReactiveMongoRepository&lt;TradingUser, String&gt; {
+
+	Mono&lt;TradingUser&gt; findByUserName(String userName);
+
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_create_add_users_utility"><a class="anchor" href="#_create_add_users_utility"></a>Create add users utility</h3>
 <div class="paragraph">
 <p>We&#8217;d like to insert users in our datastore when the application starts up. For that, create a <code>UsersCommandLineRunner</code>
 component that implements Spring Boot&#8217;s <code>CommandLineRunner</code>. In the <code>run</code> method, use the reactive repository
@@ -1259,6 +1277,45 @@ You can also <code>then().block(Duration)</code> to turn that <code>Flux</code> 
 </tr>
 </table>
 </div>
+<div class="listingblock">
+<div class="title">trading-service/src/main/java/io/spring/workshop/tradingservice/UsersCommandLineRunner.java</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">package io.spring.workshop.tradingservice;
+
+import java.time.Duration;
+import java.util.Arrays;
+import java.util.List;
+
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
+
+@Component
+public class UsersCommandLineRunner implements CommandLineRunner {
+
+	private final TradingUserRepository repository;
+
+	public UsersCommandLineRunner(TradingUserRepository repository) {
+		this.repository = repository;
+	}
+
+	@Override
+	public void run(String... strings) throws Exception {
+		List&lt;TradingUser&gt; users = Arrays.asList(
+				new TradingUser("sdeleuze", "Sebastien Deleuze"),
+				new TradingUser("snicoll", "Stephane Nicoll"),
+				new TradingUser("rstoyanchev", "Rossen Stoyanchev"),
+				new TradingUser("poutsma", "Arjen Poutsma"),
+				new TradingUser("smaldini", "Stephane Maldini"),
+				new TradingUser("simonbasle", "Simon Basle"),
+				new TradingUser("violetagg", "Violeta Georgieva"),
+				new TradingUser("bclozel", "Brian Clozel")
+		);
+		this.repository.insert(users).blockLast(Duration.ofSeconds(3));
+	}
+
+}</code></pre>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_create_a_rest_service"><a class="anchor" href="#_create_a_rest_service"></a>Create a REST service</h3>
@@ -1277,8 +1334,46 @@ Then add two new Controller methods in order to handle:</p>
 </li>
 </ul>
 </div>
+<div class="listingblock">
+<div class="title">trading-service/src/main/java/io/spring/workshop/tradingservice/UserController.java</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">package io.spring.workshop.tradingservice;
+
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class UserController {
+
+	private final TradingUserRepository tradingUserRepository;
+
+	public UserController(TradingUserRepository tradingUserRepository) {
+		this.tradingUserRepository = tradingUserRepository;
+	}
+
+	@GetMapping(path = "/users", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Flux&lt;TradingUser&gt; listUsers() {
+		return this.tradingUserRepository.findAll();
+	}
+
+	@GetMapping(path = "/users/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Mono&lt;TradingUser&gt; showUsers(@PathVariable String username) {
+		return this.tradingUserRepository.findByUserName(username);
+	}
+
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_create_a_unit_test"><a class="anchor" href="#_create_a_unit_test"></a>Create a unit test</h3>
 <div class="paragraph">
-<p>You can now validate your implementation with the following test:</p>
+<p>You can now validate your implementation with the following test (which you wrote before you wrote the controller, right?):</p>
 </div>
 <div class="listingblock">
 <div class="title">trading-service/src/test/java/io/spring/workshop/tradingservice/UserControllerTests.java</div>
@@ -1448,7 +1543,7 @@ public class UserControllerTests {
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Spring WebFlux will resolve automatically <code>Publisher</code> instances before rendering the view,
+Spring WebFlux will automatically resolve <code>Publisher</code> instances before rendering the view,
 there&#8217;s no need to involve blocking code at all!
 </td>
 </tr>
@@ -1572,11 +1667,11 @@ there&#8217;s no need to involve blocking code at all!
 </div>
 </div>
 <div class="paragraph">
-<p>As you can see in this template file, loading that HTML page will cause the browser to send a request
-the server for <code>Quotes</code> using the Server Sent Event transport.</p>
+<p>As you can see in this template file, loading the quotes.html page will cause the browser to send a request to
+the server for <code>Quotes</code> using the Server Sent Event (SSE) transport.</p>
 </div>
 <div class="paragraph">
-<p>Now create a <code>QuotesController</code> annotated with <code>@Controller</code> and add two methods.
+<p>Now create a <code>QuotesController</code> annotated with <code>@Controller</code> and add two new methods.
 One that renders the <code>quotes.html</code> template for incoming <code>"GET /quotes"</code> requests.
 The other should respond to <code>"GET /quotes/feed"</code> requests with the <code>"text/event-stream"</code> content-type,
 with a <code>Flux&lt;Quote&gt;</code> as the response body. This data is already served by the <code>stock-quotes</code> application
@@ -1589,8 +1684,8 @@ with a <code>Flux&lt;Quote&gt;</code> as the response body. This data is already
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-You should avoid making a request to the <code>stock-quotes</code> service for every browser connecting to
-that page — for that, you can use the <code>Flux.share()</code> operator.
+You should avoid making a request to the <code>stock-quotes</code> service for every browser connecting to that page;
+for that, you can use the <code>Flux.share()</code> operator.
 </td>
 </tr>
 </table>
@@ -1604,7 +1699,7 @@ that page — for that, you can use the <code>Flux.share()</code> operator.
 <div class="paragraph">
 <p>On the server side there are two main components: <code>WebSocketHandlerAdapter</code> will handle the incoming
 requests by delegating to the configured <code>WebSocketService</code> and <code>WebSocketHandler</code> will be responsible
-to handle WebSocket session.</p>
+for handling the WebSocket session.</p>
 </div>
 <div class="paragraph">
 <p>Take a look at the code samples in
@@ -1615,8 +1710,16 @@ to handle WebSocket session.</p>
 Now implement <code>handle(WebSocketSession session)</code> method. The handler echoes the incoming messages with a delay of 1s.</p>
 </div>
 <div class="paragraph">
-<p>To route requests to that handler, you need to map the above WebSocket handler to a specific URL: here, <code>"/websocket/echo"</code>.
-Create a <code>WebSocketRouter</code> configuration class (i.e. annotated with <code>@Configuration</code>) that creates a bean of type <code>HandlerMapping</code>.
+<p>To route requests to that handler, you need to map the above WebSocket handler to a specific URL: here, <code>"/websocket/echo"</code>.</p>
+</div>
+<div class="listingblock">
+<div class="title">trading-service/src/test/java/io/spring/workshop/tradingservice/websocket/EchoWebSocketHandler.java</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">Unresolved directive in README.adoc - include::../trading-service/src/test/java/io/spring/workshop/tradingservice/websocket/EchoWebSocketHandler.java[]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Create a <code>WebSocketRouter</code> configuration class (i.e. annotated with <code>@Configuration</code>) that creates a bean of type <code>HandlerMapping</code>.
 Create one additional bean of type <code>WebSocketHandlerAdapter</code> which will delegate the processing of
 the incoming request to the default <code>WebSocketService</code> which is <code>HandshakeWebSocketService</code>.</p>
 </div>
@@ -1842,7 +1945,7 @@ applications:
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-07-19 15:31:09 -0500
+Last updated 2019-07-22 11:53:12 -0500
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
