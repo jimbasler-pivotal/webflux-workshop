@@ -461,7 +461,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_create_a_quote_generator">Create a Quote Generator</a></li>
 <li><a href="#_functional_web_applications_with_webflux_fn">Functional web applications with "WebFlux.fn"</a></li>
 <li><a href="#_create_your_first_handlerfunction_routerfunction">Create your first HandlerFunction + RouterFunction</a></li>
-<li><a href="#_expose_the_fluxquotes_as_an_api">Expose the Flux&lt;Quotes&gt; as an API</a></li>
+<li><a href="#_expose_the_fluxquote_as_an_api">Expose the Flux&lt;Quote&gt; as an API</a></li>
 <li><a href="#_integration_tests_with_webtestclient">Integration tests with WebTestClient</a></li>
 <li><a href="#_deploy_to_cloud_foundry">Deploy to Cloud Foundry</a></li>
 </ul>
@@ -898,9 +898,9 @@ WebFlux workshop%</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_expose_the_fluxquotes_as_an_api"><a class="anchor" href="#_expose_the_fluxquotes_as_an_api"></a>Expose the Flux&lt;Quotes&gt; as an API</h3>
+<h3 id="_expose_the_fluxquote_as_an_api"><a class="anchor" href="#_expose_the_fluxquote_as_an_api"></a>Expose the Flux&lt;Quote&gt; as an API</h3>
 <div class="paragraph">
-<p>First, let&#8217;s declare a <code>Flux&lt;Quote&gt;</code> class field will emits a <code>Quote</code> every 1000 msec and can be <strong>shared</strong> between multiple subscribers (look at the <code>Flux</code> operators for that). Next, inject <code>QuoteGenerator</code> in the constructor of <code>QuoteHandler</code>.</p>
+<p>First, let&#8217;s declare a <code>Flux&lt;Quote&gt;</code> class field in the <code>QuoteHandler</code>. We will use this to fetch or stream quotes, depending on the request content type. To achieve this with minimal code, this <code>Flux</code> will be <strong>shared</strong> between multiple subscribers (look at the <code>Flux</code> operators for that). To set this class field, inject <code>QuoteGenerator</code> in the constructor of <code>QuoteHandler</code> and share the response of <code>fetchQuoteStream</code> to the new field. Emit a <code>Quote</code> every 1000ms.</p>
 </div>
 <div class="paragraph">
 <p>Now create a <code>streamQuotes</code> method that streams generated quotes with the <code>"application/stream+json"</code> content type. Add the corresponding part in the <code>RouterFunction</code>, on the <code>"/quotes"</code> endpoint.</p>
@@ -1189,6 +1189,7 @@ for this workshop we&#8217;ll use an in-memory instance of MongoDB. Add the foll
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="java">package io.spring.workshop.tradingservice;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -1196,7 +1197,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
-@Getter @Setter @NoArgsConstructor
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor
 public class TradingUser {
 
 	@Id
@@ -1205,12 +1206,6 @@ public class TradingUser {
 	private String userName;
 
 	private String fullName;
-
-	public TradingUser(String id, String userName, String fullName) {
-		this.id = id;
-		this.userName = userName;
-		this.fullName = fullName;
-	}
 
 	public TradingUser(String userName, String fullName) {
 		this.userName = userName;
@@ -1310,7 +1305,9 @@ public class UsersCommandLineRunner implements CommandLineRunner {
 				new TradingUser("smaldini", "Stephane Maldini"),
 				new TradingUser("simonbasle", "Simon Basle"),
 				new TradingUser("violetagg", "Violeta Georgieva"),
-				new TradingUser("bclozel", "Brian Clozel")
+				new TradingUser("bclozel", "Brian Clozel"),
+				new TradingUser("jbasler", "Jim Basler"),
+				new TradingUser("bhenzelmann", "Brian Henzelmann")
 		);
 		this.repository.insert(users).blockLast(Duration.ofSeconds(3));
 	}
@@ -1715,9 +1712,27 @@ Now implement <code>handle(WebSocketSession session)</code> method. The handler 
 <p>To route requests to that handler, you need to map the above WebSocket handler to a specific URL: here, <code>"/websocket/echo"</code>.</p>
 </div>
 <div class="listingblock">
-<div class="title">trading-service/src/test/java/io/spring/workshop/tradingservice/websocket/EchoWebSocketHandler.java</div>
+<div class="title">trading-service/src/main/java/io/spring/workshop/tradingservice/websocket/EchoWebSocketHandler.java</div>
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">Unresolved directive in README.adoc - include::../trading-service/src/test/java/io/spring/workshop/tradingservice/websocket/EchoWebSocketHandler.java[]</code></pre>
+<pre class="prettyprint highlight"><code data-lang="java">package io.spring.workshop.tradingservice.websocket;
+
+import java.time.Duration;
+
+import org.springframework.web.reactive.socket.WebSocketHandler;
+import org.springframework.web.reactive.socket.WebSocketMessage;
+import org.springframework.web.reactive.socket.WebSocketSession;
+
+import reactor.core.publisher.Mono;
+
+public class EchoWebSocketHandler implements WebSocketHandler {
+
+	@Override
+	public Mono&lt;Void&gt; handle(WebSocketSession session) {
+		return session.send(session.receive()
+				.doOnNext(WebSocketMessage::retain)
+				.delayElements(Duration.ofSeconds(1)).log());
+	}
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1947,7 +1962,7 @@ applications:
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-07-22 12:11:31 -0500
+Last updated 2019-07-22 12:42:04 -0500
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
