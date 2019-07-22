@@ -230,7 +230,7 @@ include::../stock-quotes/src/test/java/io/spring/workshop/stockquotes/StockQuote
 
 === Deploy to Cloud Foundry
 
-Cloud Foundry is an open source, multi cloud application platform as a service. We will use it to easily deploy our apps on Amazon Web Service. The same process may be used for Azure, GCP, vSphere, and other IaaS providers where Cloud Foundry is used. 
+Cloud Foundry is an open source, multi cloud application Platform-as-a-Service (PaaS). We will easily deploy our apps on Cloud Foundry on Amazon Web Service infrastructure. The same process may be used for Azure, Google Compute Platform, vSphere, and other Infrastructure-as-a-Service (IaaS) providers where Cloud Foundry is used. 
 
 . Create a free account at https://run.pivotal.io
 . Login to Pivotal Web Services
@@ -242,14 +242,14 @@ Login with your account credentials
 $ cf login -a api.run.pivotal.io
 ----
 
-Update the application manifest which provides metadata to Cloud Foundry telling it how to deploy your application. Make sure you update the route to a unique value. This is the URL used to access your app.
+Create an application manifest which provides metadata to Cloud Foundry telling it how to deploy your application. Make sure you make the route a unique value. This is the URL used to access your app.
 [source,bash]
 .stock-quotes/manifest.yml
 ----
 include::../stock-quotes/manifest.yml[]
 ----
 
-Deploy your application
+Deploy your application from the root directory where the manifest.yml file is located.
 [source,bash]
 ----
 $ cf push
@@ -327,10 +327,16 @@ We'd like to manage `TradingUser` with our datastore.
 include::../trading-service/src/main/java/io/spring/workshop/tradingservice/TradingUser.java[]
 ----
 
-For brevity we are keeping these instructions simple. You may reference the finished projects in the repo if you need some help.
-
 Create a `TradingUserRepository` interface that extends `ReactiveMongoRepository`.
 Add a `findByUserName(String userName)` method that returns a single `TradingUser` in a reactive fashion.
+
+[source,java]
+.trading-service/src/main/java/io/spring/workshop/tradingservice/TradingUserRepository.java
+----
+include::../trading-service/src/main/java/io/spring/workshop/tradingservice/TradingUserRepository.java[]
+----
+
+=== Create add users utility
 
 We'd like to insert users in our datastore when the application starts up. For that, create a `UsersCommandLineRunner`
 component that implements Spring Boot's `CommandLineRunner`. In the `run` method, use the reactive repository
@@ -339,6 +345,13 @@ to insert `TradingUser` instances in the datastore.
 NOTE: Since the `run` method returns void, it expects a blocking implementation. This is why you should use the
 `blockLast(Duration)` operator on the `Flux` returned by the repository when inserting data.
 You can also `then().block(Duration)` to turn that `Flux` into a `Mono<Void>` that waits for completion.
+
+[source,java]
+.trading-service/src/main/java/io/spring/workshop/tradingservice/UsersCommandLineRunner.java
+----
+include::../trading-service/src/main/java/io/spring/workshop/tradingservice/UsersCommandLineRunner.java[]
+----
+
 
 === Create a REST service
 
@@ -349,7 +362,15 @@ Then add two new Controller methods in order to handle:
 * GET requests to  `"/users"`, returning all `TradingUser` instances, serializing them with content-type `"application/json"`
 * GET requests to  `"/users/{username}"`, returning a single `TradingUser` instance, serializing it with content-type `"application/json"`
 
-You can now validate your implementation with the following test:
+[source,java]
+.trading-service/src/main/java/io/spring/workshop/tradingservice/UserController.java
+----
+include::../trading-service/src/main/java/io/spring/workshop/tradingservice/UserController.java[]
+----
+
+=== Create a unit test
+
+You can now validate your implementation with the following test (which you wrote before you wrote the controller, right?):
 
 [source,java]
 .trading-service/src/test/java/io/spring/workshop/tradingservice/UserControllerTests.java
@@ -385,7 +406,7 @@ Let's display those users in our application:
 * Add a Controller method that handles GET requests to `"/"`
 * Inject the Spring `Model` on that method and add a `"users"` attribute to it
 
-NOTE: Spring WebFlux will resolve automatically `Publisher` instances before rendering the view,
+NOTE: Spring WebFlux will automatically resolve `Publisher` instances before rendering the view,
 there's no need to involve blocking code at all!
 
 === Use the WebClient to stream JSON to the browser
@@ -401,17 +422,17 @@ In this section, we'll call our remote `stock-quotes` service to get Quotes from
 include::../trading-service/src/main/resources/templates/quotes.html[]
 ----
 
-As you can see in this template file, loading that HTML page will cause the browser to send a request
-the server for `Quotes` using the Server Sent Event transport.
+As you can see in this template file, loading the quotes.html page will cause the browser to send a request to 
+the server for `Quotes` using the Server Sent Event (SSE) transport.
 
-Now create a `QuotesController` annotated with `@Controller` and add two methods.
+Now create a `QuotesController` annotated with `@Controller` and add two new methods.
 One that renders the `quotes.html` template for incoming `"GET /quotes"` requests.
 The other should respond to `"GET /quotes/feed"` requests with the `"text/event-stream"` content-type,
 with a `Flux<Quote>` as the response body. This data is already served by the `stock-quotes` application
 , so you can use a `WebClient` to request the remote service to retrieve that `Flux`.
 
-TIP: You should avoid making a request to the `stock-quotes` service for every browser connecting to
-that page — for that, you can use the `Flux.share()` operator. 
+TIP: You should avoid making a request to the `stock-quotes` service for every browser connecting to that page; 
+for that, you can use the `Flux.share()` operator.
 
 === Create and Configure a WebSocketHandler
 
@@ -419,7 +440,7 @@ WebFlux includes functional reactive WebSocket client and server support.
 
 On the server side there are two main components: `WebSocketHandlerAdapter` will handle the incoming
 requests by delegating to the configured `WebSocketService` and `WebSocketHandler` will be responsible
-to handle WebSocket session.
+for handling the WebSocket session.
 
 Take a look at the code samples in 
 {spring-framework-doc-base}/spring-framework-reference/web.html#web-reactive-websocket-support[Reactive WebSocket Support documentation]
@@ -428,6 +449,14 @@ First, create an `EchoWebSocketHandler` class; it has to implement `WebSocketHan
 Now implement `handle(WebSocketSession session)` method. The handler echoes the incoming messages with a delay of 1s.
 
 To route requests to that handler, you need to map the above WebSocket handler to a specific URL: here, `"/websocket/echo"`.
+
+[source,java]
+.trading-service/src/test/java/io/spring/workshop/tradingservice/websocket/EchoWebSocketHandler.java
+----
+include::../trading-service/src/test/java/io/spring/workshop/tradingservice/websocket/EchoWebSocketHandler.java[]
+----
+
+
 Create a `WebSocketRouter` configuration class (i.e. annotated with `@Configuration`) that creates a bean of type `HandlerMapping`.
 Create one additional bean of type `WebSocketHandlerAdapter` which will delegate the processing of
 the incoming request to the default `WebSocketService` which is `HandshakeWebSocketService`.
