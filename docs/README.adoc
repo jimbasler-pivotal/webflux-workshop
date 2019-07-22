@@ -12,9 +12,8 @@ Brian Clozel, Violeta Georgieva, Brian Henzelmann, Jim Basler
 
 image::stock-trading-banner.jpg[]
 
-This repository hosts a complete workshop on Spring Boot + Spring WebFlux.
+This repository hosts a complete workshop using Spring Boot + Spring WebFlux.
 Just follow this README and create your first WebFlux applications!
-Each step of this workshop has its companion commit in the git history with a detailed commit message.
 
 We'll create two applications:
 
@@ -61,7 +60,9 @@ The Spring WebFlux Workshop comes complete with source code, so you can work you
 
 In this workshop, you will simplify Java class definitions (constructors, getters, setters) by using annotations provided by Lombok. Your IDE may not necessarily recognize the generated code, but the app should still compile.
 
-If your IDE does not recognize the generated code and you want it to, download Lombok https://projectlombok.org/download[here] and run the downloaded jar `java -jar ~/Downloads/lombok.jar`. This may detect your IDE. If it doesn't, locate the `.exe` or `.ini` for your IDE. After completing the patch, restarting your IDE will now include the Lombok integration.
+Make sure annotation processing is enabled in your IDE. More tips for enabling Intellij and Eclipse for Lombok may be found in the Baeldung blog article, https://www.baeldung.com/lombok-ide[Setting up Lombok with Eclipse and Intellij].
+
+Another option is to download Lombok https://projectlombok.org/download[here] and run the downloaded jar `java -jar ~/Downloads/lombok.jar`. This may detect your IDE. If it doesn't, locate the `.exe` or `.ini` for your IDE. After completing the patch, restarting your IDE will now include the Lombok integration.
 
 == Stock Quotes application
 
