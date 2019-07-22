@@ -452,6 +452,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_prerequisites">Prerequisites</a></li>
 <li><a href="#_reference_docs">Reference Docs</a></li>
 <li><a href="#_extra_help_optional">Extra Help (optional)</a></li>
+<li><a href="#_lombok_setup">Lombok Setup</a></li>
 </ul>
 </li>
 <li><a href="#_stock_quotes_application">Stock Quotes application</a>
@@ -597,6 +598,15 @@ and <a href="http://docs.spring.io/spring-framework/docs/5.1.8.RELEASE/javadoc-a
 </ul>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_lombok_setup"><a class="anchor" href="#_lombok_setup"></a>Lombok Setup</h3>
+<div class="paragraph">
+<p>In this workshop, you will simplify Java class definitions (constructors, getters, setters) by using annotations provided by Lombok. Your IDE may not necessarily recognize the generated code, but the app should still compile.</p>
+</div>
+<div class="paragraph">
+<p>If your IDE does not recognize the generated code and you want it to, download Lombok <a href="https://projectlombok.org/download">here</a> and run the downloaded jar <code>java -jar ~/Downloads/lombok.jar</code>. This may detect your IDE. If it doesn&#8217;t, locate the <code>.exe</code> or <code>.ini</code> for your IDE. After completing the patch, restarting your IDE will now include the Lombok integration.</p>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -605,10 +615,24 @@ and <a href="http://docs.spring.io/spring-framework/docs/5.1.8.RELEASE/javadoc-a
 <div class="sect2">
 <h3 id="_create_the_application"><a class="anchor" href="#_create_the_application"></a>Create the application</h3>
 <div class="paragraph">
-<p>Go to <code><a href="https://start.spring.io" class="bare">https://start.spring.io</a></code> and create a Maven project with Spring Boot 2.1.6.RELEASE.
-For Group use <code>io.spring.workshop</code> and for Artifact use <code>stock-quotes</code>. Under Dependencies search for <code>Spring Reactive Web</code>
-and add it to your project.
-Click 'Generate the project' to download it, then unzip and import the Maven project into your favorite IDE.</p>
+<p>Go to <code><a href="https://start.spring.io" class="bare">https://start.spring.io</a></code> and create a Maven project with Spring Boot 2.1.6.
+For Group use <code>io.spring.workshop</code> and for Artifact use <code>stock-quotes</code>.</p>
+</div>
+<div class="paragraph">
+<p>Under Dependencies search for and add the following to your project:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Spring Reactive Web</p>
+</li>
+<li>
+<p>Lombok</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Click 'Generate the project' to download it, then unzip and import the Maven project into your favorite IDE.</p>
 </div>
 <div class="paragraph">
 <p>If generated correctly, you should have a main <code>Application</code> class that looks like this:</p>
@@ -803,8 +827,10 @@ annotation in <code>@Controller</code> classes.</p>
 <div class="sect2">
 <h3 id="_create_your_first_handlerfunction_routerfunction"><a class="anchor" href="#_create_your_first_handlerfunction_routerfunction"></a>Create your first HandlerFunction + RouterFunction</h3>
 <div class="paragraph">
-<p>First, create a <code>QuoteHandler</code> class and mark is as a <code>@Component</code>;this class will have all our handler functions as methods.
-Now create a <code>hello</code> handler function in that class that always returns "text/plain" HTTP responses with "Hello Spring!" as body.</p>
+<p>First, create a <code>QuoteHandler</code> class and mark is as a <code>@Component</code>; this class will have all our handler functions as methods.</p>
+</div>
+<div class="paragraph">
+<p>Now create a <code>hello</code> handler function in that class that always returns "text/plain" HTTP responses with "Hello Spring!" as body.</p>
 </div>
 <div class="paragraph">
 <p>To route requests to that handler, you need to expose a <code>RouterFunction</code> to Spring Boot.
@@ -1087,9 +1113,33 @@ Connection: keep-alive
 <div class="sect2">
 <h3 id="_create_the_application_2"><a class="anchor" href="#_create_the_application_2"></a>Create the application</h3>
 <div class="paragraph">
-<p>Go to <code><a href="https://start.spring.io" class="bare">https://start.spring.io</a></code> and create a Maven project with Spring Boot 2.1.6.RELEASE.
-For Group use <code>io.spring.workshop</code> and for Artifact use <code>trading-service</code>. Under Dependencies search and add <code>Spring Reactive Web</code>, <code>Spring Boot DevTools</code>, <code>Thymeleaf</code> and <code>Spring Data Reactive MongoDB</code> to your project.
-Unzip the given file into a directory and import into your favorite IDE.</p>
+<p>Go to <code><a href="https://start.spring.io" class="bare">https://start.spring.io</a></code> and create a Maven project with Spring Boot 2.1.6.
+For Group use <code>io.spring.workshop</code> and for Artifact use <code>trading-service</code>.</p>
+</div>
+<div class="paragraph">
+<p>Under Dependencies search for and add the following to your project:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Spring Reactive Web</p>
+</li>
+<li>
+<p>Spring Boot DevTools</p>
+</li>
+<li>
+<p>Thymeleaf</p>
+</li>
+<li>
+<p>Spring Data Reactive MongoDB</p>
+</li>
+<li>
+<p>Lombok</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Unzip the given file into a directory and import into your favorite IDE.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1792,7 +1842,7 @@ applications:
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-07-18 16:52:15 -0500
+Last updated 2019-07-19 15:31:09 -0500
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
