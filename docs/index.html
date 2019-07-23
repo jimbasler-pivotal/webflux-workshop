@@ -1696,8 +1696,14 @@ for that, you can use the <code>Flux.share()</code> operator.
 <p>WebFlux includes functional reactive WebSocket client and server support.</p>
 </div>
 <div class="paragraph">
-<p>On the server side there are two main components: <code>WebSocketHandlerAdapter</code> will handle the incoming
-requests by delegating to the configured <code>WebSocketService</code> and <code>WebSocketHandler</code> will be responsible
+<p>On the server side there are two main components: <code>WebSocketHandlerAdapter</code> and <code>WebSocketHandler</code>.</p>
+</div>
+<div class="paragraph">
+<p><code>WebSocketHandlerAdapter</code> will handle the incoming
+requests by delegating to the configured <code>WebSocketService</code>.</p>
+</div>
+<div class="paragraph">
+<p><code>WebSocketHandler</code> will be responsible
 for handling the WebSocket session.</p>
 </div>
 <div class="paragraph">
@@ -1705,11 +1711,10 @@ for handling the WebSocket session.</p>
 <a href="http://docs.spring.io/spring-framework/docs/5.1.8.RELEASE/spring-framework-reference/web.html#web-reactive-websocket-support">Reactive WebSocket Support documentation</a></p>
 </div>
 <div class="paragraph">
-<p>First, create an <code>EchoWebSocketHandler</code> class; it has to implement <code>WebSocketHandler</code>.
-Now implement <code>handle(WebSocketSession session)</code> method. The handler echoes the incoming messages with a delay of 1s.</p>
+<p>First, create an <code>EchoWebSocketHandler</code> class; it has to implement <code>WebSocketHandler</code>.</p>
 </div>
 <div class="paragraph">
-<p>To route requests to that handler, you need to map the above WebSocket handler to a specific URL: here, <code>"/websocket/echo"</code>.</p>
+<p>Now implement <code>handle(WebSocketSession session)</code> method. The handler echoes the incoming messages with a delay of 1s.</p>
 </div>
 <div class="listingblock">
 <div class="title">trading-service/src/main/java/io/spring/workshop/tradingservice/websocket/EchoWebSocketHandler.java</div>
@@ -1736,8 +1741,13 @@ public class EchoWebSocketHandler implements WebSocketHandler {
 </div>
 </div>
 <div class="paragraph">
-<p>Create a <code>WebSocketRouter</code> configuration class (i.e. annotated with <code>@Configuration</code>) that creates a bean of type <code>HandlerMapping</code>.
-Create one additional bean of type <code>WebSocketHandlerAdapter</code> which will delegate the processing of
+<p>To route requests to that handler, you need to map the above WebSocket handler to a specific URL: <code>"/websocket/echo"</code>.</p>
+</div>
+<div class="paragraph">
+<p>Create a <code>WebSocketRouter</code> configuration class (i.e. annotated with <code>@Configuration</code>) that creates a bean of type <code>HandlerMapping</code>. For this bean, a <code>SimpleUrlHandlerMapping</code> will suffice. You will need to set the order and hash map of route handlers.</p>
+</div>
+<div class="paragraph">
+<p>Create one additional bean of type <code>WebSocketHandlerAdapter</code> which will delegate the processing of
 the incoming request to the default <code>WebSocketService</code> which is <code>HandshakeWebSocketService</code>.</p>
 </div>
 <div class="paragraph">
@@ -1962,7 +1972,7 @@ applications:
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-07-22 13:32:34 -0500
+Last updated 2019-07-23 08:48:44 -0500
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
