@@ -31,7 +31,7 @@ We'll create two applications:
 . Admin privileges to install optional software
 . https://run.pivotal.io[Free Pivotal Web Services account]
 
-=== Reference Docs
+=== Reference Documents
 
 * http://projectreactor.io/docs[Reactor Core documentation]
 * Spring WebFlux 
