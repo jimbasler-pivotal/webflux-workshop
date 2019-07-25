@@ -469,17 +469,20 @@ for that, you can use the `Flux.share()` operator.
 
 WebFlux includes functional reactive WebSocket client and server support.
 
-On the server side there are two main components: `WebSocketHandlerAdapter` will handle the incoming
-requests by delegating to the configured `WebSocketService` and `WebSocketHandler` will be responsible
+On the server side there are two main components: `WebSocketHandlerAdapter` and `WebSocketHandler`. 
+
+`WebSocketHandlerAdapter` will handle the incoming
+requests by delegating to the configured `WebSocketService`.
+
+`WebSocketHandler` will be responsible
 for handling the WebSocket session.
 
 Take a look at the code samples in 
 {spring-framework-doc-base}/spring-framework-reference/web.html#web-reactive-websocket-support[Reactive WebSocket Support documentation]
 
 First, create an `EchoWebSocketHandler` class; it has to implement `WebSocketHandler`.
-Now implement `handle(WebSocketSession session)` method. The handler echoes the incoming messages with a delay of 1s.
 
-To route requests to that handler, you need to map the above WebSocket handler to a specific URL: here, `"/websocket/echo"`.
+Now implement `handle(WebSocketSession session)` method. The handler echoes the incoming messages with a delay of 1s.
 
 [source,java]
 .trading-service/src/main/java/io/spring/workshop/tradingservice/websocket/EchoWebSocketHandler.java
@@ -488,7 +491,10 @@ include::../trading-service/src/main/java/io/spring/workshop/tradingservice/webs
 ----
 
 
-Create a `WebSocketRouter` configuration class (i.e. annotated with `@Configuration`) that creates a bean of type `HandlerMapping`.
+To route requests to that handler, you need to map the above WebSocket handler to a specific URL: `"/websocket/echo"`.
+
+Create a `WebSocketRouter` configuration class (i.e. annotated with `@Configuration`) that creates a bean of type `HandlerMapping`. For this bean, a `SimpleUrlHandlerMapping` will suffice. You will need to set the order and hash map of route handlers.
+
 Create one additional bean of type `WebSocketHandlerAdapter` which will delegate the processing of
 the incoming request to the default `WebSocketService` which is `HandshakeWebSocketService`.
 
