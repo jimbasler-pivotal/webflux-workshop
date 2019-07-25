@@ -142,7 +142,7 @@ Take a look at the code samples in
 
 === Create your first HandlerFunction + RouterFunction
 
-First, create a `QuoteHandler` class and mark is as a `@Component`; this class will have all our handler functions as methods.
+First, create a `QuoteHandler` class and mark it as a `@Component`; this class will have all our handler functions as methods.
 
 Now create a `hello` handler function in that class that always returns "text/plain" HTTP responses with "Hello Spring!" as body.
 
@@ -243,7 +243,16 @@ include::../stock-quotes/src/test/java/io/spring/workshop/stockquotes/StockQuote
 
 === Deploy to Cloud Foundry
 
-Cloud Foundry is an open source, multi cloud application Platform-as-a-Service (PaaS). We will easily deploy our apps on Cloud Foundry on Amazon Web Service infrastructure. The same process may be used for Azure, Google Compute Platform, vSphere, and other Infrastructure-as-a-Service (IaaS) providers where Cloud Foundry is used. 
+Cloud Foundry is an open source, multi cloud application Platform-as-a-Service (PaaS). We will easily deploy our apps on Cloud Foundry on Amazon Web Service infrastructure. The same process may be used for Azure, Google Compute Platform, vSphere, and other Infrastructure-as-a-Service (IaaS) providers where Cloud Foundry is used. All that is needed is a Spring Boot jar. No need to create a Docker image.
+
+==== Package your app
+
+[source,bash]
+----
+$ mvn clean package
+----
+
+==== Setup to deploy to Pivotal Web Services (PWS)
 
 . Create a free account at https://run.pivotal.io
 . Login to Pivotal Web Services
@@ -515,6 +524,15 @@ include::../trading-service/src/test/java/io/spring/workshop/tradingservice/webs
 ----
 
 === Deploy to Cloud Foundry
+
+==== Package your app
+
+[source,bash]
+----
+$ mvn clean package
+----
+
+==== Deploy to PWS
 
 Login with your account credentials
 [source,bash]
